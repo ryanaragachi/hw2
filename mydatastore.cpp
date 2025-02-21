@@ -12,13 +12,18 @@ MyDataStore::~MyDataStore() {
     }
 }
 
+
+
+
 void MyDataStore::addProduct(Product* p) {
     products_.push_back(p);
     std::set<std::string> keywords = p->keywords();
+
     for (const std::string& keyword : keywords) {
         keywordMap_[keyword].insert(p);
     }
 }
+
 
 void MyDataStore::addUser(User* u) {
     users_[u->getName()] = u;
@@ -26,25 +31,26 @@ void MyDataStore::addUser(User* u) {
 
 std::vector<Product*> MyDataStore::search(std::vector<std::string>& terms, int type) {
     std::vector<Product*> results;
-
     if (terms.empty()) return results;
 
     std::set<Product*> resultSet;
+
     if (keywordMap_.find(terms[0]) != keywordMap_.end()) {
         resultSet = keywordMap_[terms[0]];
     }
 
     for (size_t i = 1; i < terms.size(); ++i) {
         if (keywordMap_.find(terms[i]) != keywordMap_.end()) {
-            if (type == 0) { // AND search
+            if (type == 0) {  // AND search
                 resultSet = setIntersection(resultSet, keywordMap_[terms[i]]);
-            } else { // OR search
+            } else {  // OR search
                 resultSet = setUnion(resultSet, keywordMap_[terms[i]]);
             }
         }
     }
 
     results.assign(resultSet.begin(), resultSet.end());
+    lastSearchResults_ = results;  
     return results;
 }
 
@@ -64,28 +70,52 @@ void MyDataStore::dump(std::ostream& ofile) {
 
 // --- Cart Management Methods ---
 
+
+
+
+
+
+
+
 void MyDataStore::addToCart(std::string username, int hitIndex) {
+    if (hitIndex < 0 || hitIndex >= (int)lastSearchResults_.size()) {
+        std::cout << "Invalid request" << std::endl;
+        return;
+    }
     if (users_.find(username) == users_.end()) {
-        std::cout << "Invalid username\n";
+        std::cout << "Invalid request" << std::endl;
         return;
     }
-    if (hitIndex < 0 || hitIndex >= (int)products_.size()) {
-        std::cout << "Invalid request\n";
-        return;
-    }
-    carts_[username].push_back(products_[hitIndex]);
+    carts_[username].push_back(lastSearchResults_[hitIndex]);
 }
+
 
 void MyDataStore::viewCart(std::string username) {
     if (users_.find(username) == users_.end()) {
         std::cout << "Invalid username\n";
         return;
     }
+
+    std::vector<Product*>& cart = carts_[username];
+    if (cart.empty()) {
+        std::cout << "Cart is empty.\n";
+        return;
+    }
+
     int index = 1;
-    for (Product* p : carts_[username]) {
-        std::cout << "Item " << index++ << ": " << p->displayString() << "\n";
+    for (Product* p : cart) {
+        std::cout << "Item " << index << ":\n";
+        std::cout << p->displayString() << "\n";
+        std::cout << std::endl;
+        index++;
     }
 }
+
+
+
+
+
+
 
 void MyDataStore::buyCart(std::string username) {
     if (users_.find(username) == users_.end()) {
@@ -107,3 +137,6 @@ void MyDataStore::buyCart(std::string username) {
         }
     }
 }
+
+
+

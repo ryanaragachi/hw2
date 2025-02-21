@@ -1,3 +1,5 @@
+#include <iomanip>
+#include <iostream>
 #include "book.h"
 #include "util.h"
 #include <sstream>
@@ -14,12 +16,13 @@ std::set<std::string> Book::keywords() const {
     return keys;
 }
 
+
+
 std::string Book::displayString() const {
     std::ostringstream oss;
-    oss << name_ << "\nAuthor: " << author_ 
-        << " ISBN: " << isbn_ 
-        << "\nPrice: $" << price_ 
-        << " Quantity: " << qty_;
+    oss << name_ << "\n"
+        << "Author: " << author_ << " ISBN: " << isbn_ << "\n"
+        << std::fixed << std::setprecision(2) << price_ << " " << qty_ << " left.";
     return oss.str();
 }
 

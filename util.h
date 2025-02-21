@@ -32,40 +32,13 @@ std::set<T> setIntersection(std::set<T>& s1, std::set<T>& s2)
 
 }
 template <typename T>
-std::set<T> setUnion(std::set<T>& s1, std::set<T>& s2)
-{
-std::set<T> result;
-    typename std::set<T>::iterator it1 = s1.begin();
-    typename std::set<T>::iterator it2 = s2.begin();
 
-    while (it1 != s1.end() && it2 != s2.end()) {
-        if (*it1 < *it2) {
-            result.insert(*it1);
-            ++it1;
-        } else if (*it2 < *it1) {
-            result.insert(*it2);
-            ++it2;
-        } else { // Elements are equal
-            result.insert(*it1);
-            ++it1;
-            ++it2;
-        }
-    }
 
-    // Insert remaining elements if any
-    while (it1 != s1.end()) {
-        result.insert(*it1);
-        ++it1;
-    }
-    while (it2 != s2.end()) {
-        result.insert(*it2);
-        ++it2;
-    }
-
+std::set<T> setUnion(std::set<T>& s1, std::set<T>& s2) {
+    std::set<T> result = s1;  // Copy the first set
+    result.insert(s2.begin(), s2.end());  // Insert elements from the second set
     return result;
-
 }
-
 /***********************************************/
 /* Prototypes of functions defined in util.cpp */
 /***********************************************/

@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iomanip>
 #include "clothing.h"
 #include "util.h"
 #include <sstream>
@@ -13,12 +15,13 @@ std::set<std::string> Clothing::keywords() const {
     return keys;
 }
 
+
+
 std::string Clothing::displayString() const {
     std::ostringstream oss;
-    oss << name_ << "\nSize: " << size_ 
-        << " Brand: " << brand_ 
-        << "\nPrice: $" << price_ 
-        << " Quantity: " << qty_;
+    oss << name_ << "\n"
+        << "Size: " << size_ << " Brand: " << brand_ << "\n"
+        << std::fixed << std::setprecision(2) << price_ << " " << qty_ << " left.";
     return oss.str();
 }
 

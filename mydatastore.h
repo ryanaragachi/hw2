@@ -29,6 +29,7 @@ private:
     std::map<std::string, User*> users_;
     std::map<std::string, std::set<Product*>> keywordMap_; // Keyword → Products
     std::map<std::string, std::vector<Product*>> carts_;   // Username → Cart
+    std::vector<Product*> lastSearchResults_;
 };
 
 #endif
